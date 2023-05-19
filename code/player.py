@@ -65,8 +65,6 @@ class Player(pygame.sprite.Sprite):
         elif direction == DirectionType.VERTICAL:
             self._check_for_collision_vertical()
 
-                    
-
     def update(self):
         self.input()
         self.move(self.speed)

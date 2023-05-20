@@ -4,6 +4,8 @@ from tile import Tile
 from settings import *
 from player import Player
 import common.constants as c
+from common.helpers import import_csv_layout
+from common.enums import SpriteType, LayoutType
 
 class Level:
     player: Player
@@ -18,14 +20,23 @@ class Level:
         self.create_map()
 
     def create_map(self):
-        for row_idx, row in enumerate(WORLD_MAP):
-            for col_idx, col in enumerate(row):
-                x = col_idx * TILESIZE
-                y = row_idx * TILESIZE
-                if col == "x":
-                    Tile((x,y), [self.visible_sprites, self.obstacle_sprites])
-                elif col == "p":
-                    self.player = Player((x, y), [self.visible_sprites], self.obstacle_sprites)
+        layouts = {
+            'boundary': import_csv_layout(c.PROJECT_DIRPATH / 'map/map_FloorBlocks.csv'),
+        }
+        for style, layout in layouts.items():
+            for row_idx, row in enumerate(layout):
+                for col_idx, col in enumerate(row):
+                    x = col_idx * TILESIZE
+                    y = row_idx * TILESIZE
+                    if style == 'boundary':
+                        if col == LayoutType.BOUNDARY.value:
+                            Tile((x,y), [self.visible_sprites, self.obstacle_sprites], SpriteType.INVISIBLE)
+                    
+    #             if col == "x":
+    #                 Tile((x,y), [self.visible_sprites, self.obstacle_sprites])
+    #             elif col == "p":
+    #                 self.player = Player((x, y), [self.visible_sprites], self.obstacle_sprites)
+        self.player = Player((2000, 1500), [self.visible_sprites], self.obstacle_sprites)
 
     def run(self):
         self.visible_sprites.custom_draw(self.player)

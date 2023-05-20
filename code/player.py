@@ -10,6 +10,7 @@ class Player(pygame.sprite.Sprite):
         image_path = c.PROJECT_DIRPATH / 'graphics/test/player.png'
         self.image = pygame.image.load(image_path).convert_alpha()
         self.rect = self.image.get_rect(topleft=pos)
+        self.hitbox = self.rect.inflate(0, -26)
 
         self.direction = pygame.math.Vector2()
         self.speed = 5
@@ -37,27 +38,28 @@ class Player(pygame.sprite.Sprite):
     def move(self, speed):
         if self.direction.magnitude() != 0:
             self.direction = self.direction.normalize()
-        self.rect.x += self.direction.x * speed
+        self.hitbox.x += self.direction.x * speed
         self.collision(DirectionType.HORIZONTAL)
-        self.rect.y += self.direction.y * speed
+        self.hitbox.y += self.direction.y * speed
         self.collision(DirectionType.VERTICAL)
+        self.rect.center = self.hitbox.center
         # self.rect.center += self.direction * speed
 
     def _check_for_collision_horizontal(self):
         for sprite in self.obstacle_sprites:
-            if sprite.rect.colliderect(self.rect):
+            if sprite.hitbox.colliderect(self.hitbox):
                 if self.direction.x > 0:
-                    self.rect.right = sprite.rect.left
+                    self.hitbox.right = sprite.hitbox.left
                 elif self.direction.x < 0:
-                    self.rect.left = sprite.rect.right
+                    self.hitbox.left = sprite.hitbox.right
 
     def _check_for_collision_vertical(self):
         for sprite in self.obstacle_sprites:
-            if sprite.rect.colliderect(self.rect):
+            if sprite.hitbox.colliderect(self.hitbox):
                 if self.direction.y > 0:
-                    self.rect.bottom = sprite.rect.top
+                    self.hitbox.bottom = sprite.hitbox.top
                 elif self.direction.y < 0:
-                    self.rect.top = sprite.rect.bottom
+                    self.hitbox.top = sprite.hitbox.bottom
         
     def collision(self, direction: DirectionType):
         if direction == DirectionType.HORIZONTAL:

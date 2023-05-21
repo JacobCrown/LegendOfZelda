@@ -9,6 +9,7 @@ class DirectionType(Enum):
 class SpriteType(Enum):
     INVISIBLE = 1
     GRASS = 2
+    OBJECT = 3
 
 
 class LayoutType(Enum):

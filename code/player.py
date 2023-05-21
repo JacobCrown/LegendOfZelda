@@ -43,7 +43,6 @@ class Player(pygame.sprite.Sprite):
         self.hitbox.y += self.direction.y * speed
         self.collision(DirectionType.VERTICAL)
         self.rect.center = self.hitbox.center
-        # self.rect.center += self.direction * speed
 
     def _check_for_collision_horizontal(self):
         for sprite in self.obstacle_sprites:

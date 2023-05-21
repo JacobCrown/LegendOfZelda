@@ -1,10 +1,12 @@
+import random
+
 import pygame
 
 from tile import Tile
 from settings import *
 from player import Player
 import common.constants as c
-from common.helpers import import_csv_layout
+from common.helpers import import_csv_layout, import_folder
 from common.enums import SpriteType, LayoutType
 
 class Level:
@@ -22,20 +24,27 @@ class Level:
     def create_map(self):
         layouts = {
             'boundary': import_csv_layout(c.PROJECT_DIRPATH / 'map/map_FloorBlocks.csv'),
+            'grass': import_csv_layout(c.PROJECT_DIRPATH / 'map/map_Grass.csv'),
+            'object': import_csv_layout(c.PROJECT_DIRPATH / 'map/map_Objects.csv'),
         }
+        graphics = {
+            'grass': import_folder(c.PROJECT_DIRPATH / 'graphics/Grass')
+        }
+
         for style, layout in layouts.items():
             for row_idx, row in enumerate(layout):
                 for col_idx, col in enumerate(row):
-                    x = col_idx * TILESIZE
-                    y = row_idx * TILESIZE
-                    if style == 'boundary':
-                        if col == LayoutType.BOUNDARY.value:
-                            Tile((x,y), [self.visible_sprites, self.obstacle_sprites], SpriteType.INVISIBLE)
+                    if col != LayoutType.NOTHING.value:
+                        x = col_idx * TILESIZE
+                        y = row_idx * TILESIZE
+                        if style == 'boundary':
+                            Tile((x,y), [self.obstacle_sprites], SpriteType.INVISIBLE)
+                        if style == 'grass':
+                            rand_surface = random.choice(graphics['grass']).convert_alpha()
+                            Tile((x,y), [self.visible_sprites, self.obstacle_sprites], SpriteType.GRASS, surface=rand_surface)
+                        if style == 'object':
+                            pass
                     
-    #             if col == "x":
-    #                 Tile((x,y), [self.visible_sprites, self.obstacle_sprites])
-    #             elif col == "p":
-    #                 self.player = Player((x, y), [self.visible_sprites], self.obstacle_sprites)
         self.player = Player((2000, 1500), [self.visible_sprites], self.obstacle_sprites)
 
     def run(self):

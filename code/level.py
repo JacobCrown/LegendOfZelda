@@ -8,6 +8,7 @@ from player import Player
 import common.constants as c
 from common.helpers import import_csv_layout, import_folder
 from common.enums import SpriteType, LayoutType
+from debug import debug
 
 class Level:
     player: Player
@@ -52,6 +53,7 @@ class Level:
     def run(self):
         self.visible_sprites.custom_draw(self.player)
         self.visible_sprites.update()
+        debug(self.player.status)
 
 
 class YSortCameraGroup(pygame.sprite.Group):

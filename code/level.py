@@ -46,7 +46,6 @@ class Level:
                         if style == 'object':
                             surf = graphics['objects'][int(col)]
                             Tile((x,y), [self.visible_sprites, self.obstacle_sprites], SpriteType.OBJECT, surface=surf)
-
                     
         self.player = Player((2000, 1400), [self.visible_sprites], self.obstacle_sprites)
 

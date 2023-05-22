@@ -1,8 +1,11 @@
+import os
+
 import pygame
 
 from settings import *
 import common.constants as c
 from common.enums import DirectionType
+from common.helpers import import_folder
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos, groups, obstacle_sprites):
@@ -12,6 +15,8 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft=pos)
         self.hitbox = self.rect.inflate(0, -26)
 
+        self.import_player_assets()
+
         # movement
         self.direction = pygame.math.Vector2()
         self.speed = 5
@@ -20,6 +25,18 @@ class Player(pygame.sprite.Sprite):
         self.attack_time = None
 
         self.obstacle_sprites = obstacle_sprites
+
+    def import_player_assets(self):
+        character_path = c.PROJECT_DIRPATH / 'graphics/player/'
+        self.animations = {
+            'up': [], 'down': [], 'left': [], 'right': [], 
+            'up_idle': [], 'down_idle': [], 'left_idle': [], 'right_idle': [], 
+            'up_attack': [], 'down_attack': [], 'left_attack': [], 'right_attack': [], 
+        }
+
+        for animation in self.animations.keys():
+            full_path = character_path / animation
+            self.animations[animation].append(import_folder(full_path))
 
     def input(self):
         keys = pygame.key.get_pressed()

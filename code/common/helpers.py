@@ -26,6 +26,3 @@ def import_folder(path: Path):
             surface_list.append(image_surf)
     
     return surface_list
-            
-
-import_folder(c.PROJECT_DIRPATH / 'graphics/Grass')

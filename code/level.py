@@ -9,6 +9,7 @@ import common.constants as c
 from common.helpers import import_csv_layout, import_folder
 from common.enums import SpriteType, LayoutType
 from debug import debug
+from weapon import Weapon
 
 class Level:
     player: Player
@@ -48,7 +49,11 @@ class Level:
                             surf = graphics['objects'][int(col)]
                             Tile((x,y), [self.visible_sprites, self.obstacle_sprites], SpriteType.OBJECT, surface=surf)
                     
-        self.player = Player((2000, 1400), [self.visible_sprites], self.obstacle_sprites)
+        self.player = Player((2000, 1400), [self.visible_sprites], self.obstacle_sprites, self.create_attack)
+
+    def create_attack(self):
+        Weapon(self.player, [self.visible_sprites])
+
 
     def run(self):
         self.visible_sprites.custom_draw(self.player)

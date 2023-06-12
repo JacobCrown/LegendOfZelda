@@ -1,4 +1,4 @@
-import os
+import typing as T
 
 import pygame
 
@@ -8,7 +8,7 @@ from common.enums import DirectionType, PlayerDirection, PlayerStatus
 from common.helpers import import_folder
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, groups, obstacle_sprites):
+    def __init__(self, pos, groups, obstacle_sprites, create_attack: T.Callable):
         super().__init__(groups)
         image_path = c.PROJECT_DIRPATH / 'graphics/test/player.png'
         self.image = pygame.image.load(image_path).convert_alpha()
@@ -28,6 +28,7 @@ class Player(pygame.sprite.Sprite):
         self.attacking = False
         self.attack_cooldown = 400
         self.attack_time = None
+        self.create_attack = create_attack
 
         self.obstacle_sprites = obstacle_sprites
 
@@ -72,13 +73,12 @@ class Player(pygame.sprite.Sprite):
             if keys[pygame.K_SPACE]:
                 self.attacking = True
                 self.attack_time = pygame.time.get_ticks()
-                print('attack')
+                self.create_attack()
 
             # magic 
             if keys[pygame.K_LCTRL]:
                 self.attacking = True
                 self.attack_time = pygame.time.get_ticks()
-                print('magic')
 
     def get_status(self):
         # idle status

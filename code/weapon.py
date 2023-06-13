@@ -1,5 +1,6 @@
 import pygame
 
+import common.constants as c
 from player import Player
 from common.enums import PlayerDirection
 
@@ -10,7 +11,8 @@ class Weapon(pygame.sprite.Sprite):
         direction = player.player_direction
 
         #graphics
-        self.image = pygame.Surface((40,40))
+        full_path = c.PROJECT_DIRPATH / f"graphics/weapons/{player.weapon}/{direction.name.lower()}.png"
+        self.image = pygame.image.load(full_path).convert_alpha()
 
         #placement
         self.rect = self._get_rect_placement(direction, player)

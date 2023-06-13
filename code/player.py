@@ -8,7 +8,8 @@ from common.enums import DirectionType, PlayerDirection, PlayerStatus
 from common.helpers import import_folder
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, groups, obstacle_sprites, create_attack: T.Callable):
+    def __init__(self, pos, groups, obstacle_sprites, create_attack: T.Callable,
+                 destroy_attack: T.Callable):
         super().__init__(groups)
         image_path = c.PROJECT_DIRPATH / 'graphics/test/player.png'
         self.image = pygame.image.load(image_path).convert_alpha()
@@ -32,6 +33,7 @@ class Player(pygame.sprite.Sprite):
 
         # weapon
         self.create_attack = create_attack
+        self.destroy_attack = destroy_attack
         self.weapon_index = 0
         self.weapon = list(weapon_data.keys())[self.weapon_index]
 
@@ -139,6 +141,7 @@ class Player(pygame.sprite.Sprite):
         if self.attacking:
             if current_time - self.attack_time >= self.attack_cooldown:
                 self.attacking = False
+                self.destroy_attack()
 
     def animate(self):
         self.status = self.get_status()
